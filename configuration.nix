@@ -2,53 +2,53 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ 
-	config, 
-	pkgs, 
-	... 
+{
+	config,
+	pkgs,
+	...
 }:
 
 {
 	imports = [ # Include the results of the hardware scan.
-      		./hardware-configuration.nix
-    	];
+	    ./hardware-configuration.nix
+    ];
 
-	#services.displayManager.gdm.enable = true;
-  	#services.desktopManager.gnome.enable = true;
+    #services.displayManager.gdm.enable = true;
+    #services.desktopManager.gnome.enable = true;
 
 	programs.appimage.enable = true;
 	programs.appimage.binfmt = true;
 	programs.appimage.package = pkgs.appimage-run.override {
-  		extraPkgs = pkgs: [
-    			pkgs.icu
-    			pkgs.libxcrypt-legacy
-    			pkgs.python312
-    			pkgs.python312Packages.torch
-  		]; 
+	    extraPkgs = pkgs: [
+            pkgs.icu
+            pkgs.libxcrypt-legacy
+            pkgs.python312
+            pkgs.python312Packages.torch
+  		];
 	};
 
 	programs.nix-ld.enable = true;
   	services.flatpak.enable = true;
-	
+
 	services.xserver.videoDrivers = [
-    		"nvidia"
+        "nvidia"
   	];
 
   	hardware.nvidia = {
-    		modesetting.enable = true;
-    		open = false;
-    		nvidiaSettings = true;
+        modesetting.enable = true;
+        open = false;
+        nvidiaSettings = true;
   	};
 
   	nix.settings.experimental-features = [
-    		"nix-command"
-    		"flakes"
+        "nix-command"
+        "flakes"
   	];
 
   	nix.gc = {
-    		automatic = true;
-    		dates = "weekly";
-    		options = "--delete-older-than 7d";
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 7d";
   	};
 
   	# Bootloader.
@@ -76,15 +76,15 @@
   	i18n.defaultLocale = "pt_BR.UTF-8";
 
   	i18n.extraLocaleSettings = {
-    		LC_ADDRESS = "pt_BR.UTF-8";
-    		LC_IDENTIFICATION = "pt_BR.UTF-8";
-    		LC_MEASUREMENT = "pt_BR.UTF-8";
-    		LC_MONETARY = "pt_BR.UTF-8";
-    		LC_NAME = "pt_BR.UTF-8";
-    		LC_NUMERIC = "pt_BR.UTF-8";
-    		LC_PAPER = "pt_BR.UTF-8";
-    		LC_TELEPHONE = "pt_BR.UTF-8";
-    		LC_TIME = "pt_BR.UTF-8";
+        LC_ADDRESS = "pt_BR.UTF-8";
+        LC_IDENTIFICATION = "pt_BR.UTF-8";
+        LC_MEASUREMENT = "pt_BR.UTF-8";
+        LC_MONETARY = "pt_BR.UTF-8";
+        LC_NAME = "pt_BR.UTF-8";
+        LC_NUMERIC = "pt_BR.UTF-8";
+        LC_PAPER = "pt_BR.UTF-8";
+        LC_TELEPHONE = "pt_BR.UTF-8";
+        LC_TIME = "pt_BR.UTF-8";
   	};
 
   	# Enable the X11 windowing system.
@@ -97,8 +97,8 @@
 
   	# Configure keymap in X11
   	services.xserver.xkb = {
-    		layout = "br";
-    		variant = "";
+        layout = "br";
+        variant = "";
   	};
 
   	# Configure console keymap
@@ -111,16 +111,16 @@
   	services.pulseaudio.enable = false;
   	security.rtkit.enable = true;
   	services.pipewire = {
-    		enable = true;
-    		alsa.enable = true;
-    		alsa.support32Bit = true;
-    		pulse.enable = true;
-    		# If you want to use JACK applications, uncomment this
-    		#jack.enable = true;
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+        # If you want to use JACK applications, uncomment this
+        #jack.enable = true;
 
-    		# use the example session manager (no others are packaged yet so this is enabled by default,
-    		# no need to redefine it in your config for now)
-    		#media-session.enable = true;
+        # use the example session manager (no others are packaged yet so this is enabled by default,
+        # no need to redefine it in your config for now)
+        #media-session.enable = true;
   	};
 
   	# Enable touchpad support (enabled default in most desktopManager).
@@ -128,16 +128,16 @@
 
   	# Define a user account. Don't forget to set a password with ‘passwd’.
   	users.users.vitor = {
-    		isNormalUser = true;
-    		description = "vitor";
-    		extraGroups = [ 
-			"networkmanager" 
-			"wheel" 
+        isNormalUser = true;
+        description = "vitor";
+        extraGroups = [
+            "networkmanager"
+			"wheel"
 		];
-    		packages = with pkgs; [
-      			kdePackages.kate
-    			#thunderbird
-    		];
+        packages = with pkgs; [
+            kdePackages.kate
+            #thunderbird
+        ];
   	};
 
   	# Install firefox.
@@ -151,14 +151,14 @@
   	# List packages installed in system profile. To search, run:
   	# $ nix search wget
   	environment.systemPackages = with pkgs; [
-		wget
-    		neovim
-    		git
-    		vlc
-    		zapzap
-    		alacritty
-    		fastfetch
-    		zsh
+        wget
+        neovim
+        git
+        vlc
+        zapzap
+        alacritty
+        fastfetch
+        zsh
 		libreoffice
 		vscodium
 		zed-editor
@@ -174,11 +174,11 @@
 
   	# Some programs need SUID wrappers, can be configured further or are
   	# started in user sessions.
-  	# programs.mtr.enable = true;
-  	# programs.gnupg.agent = {
-  		#enable = true;
+  	#programs.mtr.enable = true;
+  	#programs.gnupg.agent = {
+        #enable = true;
   		#enableSSHSupport = true;
-  	# };
+  	#};
 
   	# List services that you want to enable:
 
@@ -187,10 +187,10 @@
 
   	# Open ports in the firewall.
   	#networking.firewall.allowedTCPPorts = [
-		#... 
+        #...
 	#];
-  	#networking.firewall.allowedUDPPorts = [ 
-		#... 
+  	#networking.firewall.allowedUDPPorts = [
+		#...
 	#];
   	# Or disable the firewall altogether.
   	#networking.firewall.enable = false;
