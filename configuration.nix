@@ -33,6 +33,9 @@
         steam = {
             enable = true;
         };
+        zsh = {
+            enable = true;
+        };
     };
 
     services = {
@@ -159,6 +162,7 @@
     users = {
         users = {
             vitor = {
+                shell = pkgs.zsh;
                 isNormalUser = true;
                 description = "vitor";
                 extraGroups = [
@@ -166,6 +170,17 @@
                     "wheel"
                 ];
                 packages = with pkgs; [
+                    vlc
+                    zapzap
+                    alacritty
+                    fastfetch
+                    libreoffice
+                    vscodium
+                    zed-editor
+                    protonup-qt
+                    protontricks
+                    obs-studio
+                    logseq
                     kdePackages.kate
                 ];
             };
@@ -185,26 +200,17 @@
             wget
             neovim
             git
-            vlc
-            zapzap
-            alacritty
-            fastfetch
-            zsh
-            libreoffice
-            vscodium
-            zed-editor
-            protonup-qt
-            protontricks
             zip
             unzip
             wine
             fuse
             glib
-            obs-studio
-            logseq
             nixd
             nil
         ];
     };
-  	system.stateVersion = "25.11"; # Did you read the comment?
+
+  	system = {
+       stateVersion = "25.11";
+    };
 }
