@@ -170,6 +170,10 @@
 		fuse
 		appimage-run
 		glib
+		obs-studio
+		logseq
+		nixd
+		nil
   	];
 
   	# Some programs need SUID wrappers, can be configured further or are
