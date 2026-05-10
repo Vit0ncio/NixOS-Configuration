@@ -36,6 +36,12 @@
         zsh = {
             enable = true;
         };
+        starship = {
+            enable = true;
+        };
+        hyprland = {
+            enable = true;
+        };
     };
 
     services = {
@@ -181,7 +187,13 @@
                     protontricks
                     obs-studio
                     logseq
+                    nerd-fonts.jetbrains-mono
+                    inter
+                    papirus-nord
+                    bibata-cursors
+                    spotdl
                     kdePackages.kate
+                    p7zip
                 ];
             };
         };
