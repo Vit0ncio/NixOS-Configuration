@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 {
 	config,
 	pkgs,
@@ -9,7 +5,7 @@
 }:
 
 {
-	imports = [ # Include the results of the hardware scan.
+	imports = [
 	    ./hardware-configuration.nix
     ];
 
@@ -24,22 +20,47 @@
                 ];
             };
         };
+
         nix-ld = {
             enable = true;
         };
+
         firefox = {
             enable = true;
         };
+
         steam = {
             enable = true;
+            remotePlay = {
+                openFirewall = true;
+            };
+
+            dedicatedServer = {
+                openFirewall = true;
+            };
+
+            gamescopeSession = {
+                enable = true;
+            };
         };
+
         zsh = {
             enable = true;
         };
+
         starship = {
             enable = true;
         };
+
         hyprland = {
+            enable = true;
+        };
+
+        gamemode = {
+            enable = true;
+        };
+
+        dconf = {
             enable = true;
         };
     };
@@ -48,44 +69,62 @@
         flatpak = {
             enable = true;
         };
+
         xserver = {
             videoDrivers = [
                 "nvidia"
             ];
+
             enable = true;
             xkb = {
                 layout = "br";
                 variant = "";
             };
         };
+
         displayManager = {
             sddm = {
                 enable = true;
             };
         };
+
         desktopManager = {
             plasma6 = {
                 enable = true;
             };
         };
+
         printing = {
             enable = true;
         };
+
         pipewire = {
             enable = true;
             alsa = {
                 enable = true;
                 support32Bit = true;
             };
+
             pulse = {
                 enable = true;
             };
+
             jack = {
                 enable = true;
             };
         };
+
         pulseaudio = {
             enable = false;
+        };
+
+        fstrim = {
+            enable = true;
+            interval = "weekly";
+        };
+
+        fwupd = {
+            enable = true;
         };
     };
 
@@ -96,6 +135,9 @@
             };
             open = false;
             nvidiaSettings = true;
+            powerManagement = {
+                enable = true;
+            };
         };
   	};
 
@@ -107,6 +149,7 @@
             ];
             auto-optimise-store = true;
         };
+
         gc = {
             automatic = true;
             dates = "weekly";
@@ -130,6 +173,7 @@
         wireless = {
             enable = false;
         };
+
         networkmanager = {
             enable = true;
         };
@@ -153,7 +197,6 @@
             LC_TIME = "pt_BR.UTF-8";
         };
     };
-
     console = {
         keyMap = "br-abnt2";
     };
@@ -164,7 +207,6 @@
         };
     };
 
-  	# Define a user account. Don't forget to set a password with ‘passwd’.
     users = {
         users = {
             vitor = {
@@ -175,28 +217,38 @@
                     "networkmanager"
                     "wheel"
                 ];
+
                 packages = with pkgs; [
                     vlc
+                    obs-studio
                     zapzap
                     alacritty
                     fastfetch
                     libreoffice
                     vscodium
                     zed-editor
+                    kdePackages.kate
                     protonup-qt
                     protontricks
-                    obs-studio
                     logseq
                     nerd-fonts.jetbrains-mono
                     inter
                     papirus-nord
                     bibata-cursors
                     spotdl
-                    kdePackages.kate
                     p7zip
                 ];
             };
         };
+    };
+
+    fonts = {
+        packages = with pkgs; [
+            noto-fonts
+            noto-fonts-cjk-sans
+            noto-fonts-emoji
+            liberation_ttf
+        ];
     };
 
     nixpkgs = {
@@ -205,13 +257,10 @@
         };
     };
 
-  	# List packages installed in system profile. To search, run:
-  	# $ nix search wget
     environment = {
         systemPackages = with pkgs; [
             wget
             neovim
-            git
             zip
             unzip
             wine
@@ -219,7 +268,19 @@
             glib
             nixd
             nil
+            git
+            btop
+            pciutils
+            usbutils
+            killall
         ];
+
+        sessionVariables = {
+            NIXOS_OZONE_WL = "1";
+            WLR_NO_HARDWARE_CURSORS = "1";
+            __GL_GSYNC_ALLOWED = "0";
+            __GL_VRR_ALLOWED = "0";
+        };
     };
 
   	system = {
