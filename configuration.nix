@@ -231,12 +231,11 @@
                     protonup-qt
                     protontricks
                     logseq
-                    nerd-fonts.jetbrains-mono
-                    inter
                     papirus-nord
                     bibata-cursors
                     spotdl
                     p7zip
+                    freetube
                 ];
             };
         };
@@ -244,9 +243,11 @@
 
     fonts = {
         packages = with pkgs; [
+            inter
+            nerd-fonts.jetbrains-mono
             noto-fonts
             noto-fonts-cjk-sans
-            noto-fonts-emoji
+            noto-fonts-color-emoji
             liberation_ttf
         ];
     };
@@ -259,6 +260,11 @@
 
     environment = {
         systemPackages = with pkgs; [
+            (python3.withPackages (ps: with ps; [
+                requests
+                selenium
+            ]))
+            geckodriver
             wget
             neovim
             zip
