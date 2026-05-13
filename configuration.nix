@@ -17,16 +17,155 @@
                 extraPkgs = pkgs: [
                     pkgs.icu
                     pkgs.libxcrypt-legacy
+                    pkgs.python312
+                    pkgs.python312Packages.torch
                 ];
             };
         };
 
         nix-ld = {
             enable = true;
+
+            libraries = with pkgs; [
+                # List by default
+                zlib
+                zstd
+                stdenv.cc.cc
+                curl
+                openssl
+                attr
+                libssh
+                bzip2
+                libxml2
+                acl
+                libsodium
+                util-linux
+                xz
+                systemd
+                xorg.libXcomposite
+                xorg.libXtst
+                xorg.libXrandr
+                xorg.libXext
+                xorg.libX11
+                xorg.libXfixes
+                libGL
+                libva
+                pipewire
+                xorg.libxcb
+                xorg.libXdamage
+                xorg.libxshmfence
+                xorg.libXxf86vm
+                libelf
+                glib
+                gtk2
+                networkmanager
+                vulkan-loader
+                libgbm
+                libdrm
+                libxcrypt
+                coreutils
+                pciutils
+                zenity
+                xorg.libXinerama
+                xorg.libXcursor
+                xorg.libXrender
+                xorg.libXScrnSaver
+                xorg.libXi
+                xorg.libSM
+                xorg.libICE
+                gnome2.GConf
+                nspr
+                nss
+                cups
+                libcap
+                SDL2
+                libusb1
+                dbus-glib
+                ffmpeg
+                libudev0-shim
+                gtk3
+                icu
+                libnotify
+                gsettings-desktop-schemas
+                xorg.libXt
+                xorg.libXmu
+                libogg
+                libvorbis
+                SDL
+                SDL2_image
+                glew110
+                libidn
+                tbb
+                flac
+                freeglut
+                libjpeg
+                libpng
+                libpng12
+                libsamplerate
+                libmikmod
+                libtheora
+                libtiff
+                pixman
+                speex
+                SDL_image
+                SDL_ttf
+                SDL_mixer
+                SDL2_ttf
+                SDL2_mixer
+                libappindicator-gtk2
+                libdbusmenu-gtk2
+                libindicator-gtk2
+                libcaca
+                libcanberra
+                libgcrypt
+                libvpx
+                librsvg
+                xorg.libXft
+                libvdpau
+                pango
+                cairo
+                atk
+                gdk-pixbuf
+                fontconfig
+                freetype
+                dbus
+                alsa-lib
+                expat
+                libxkbcommon
+                libxcrypt-legacy
+                libGLU
+                fuse
+                e2fsprogs
+            ];
         };
 
         firefox = {
             enable = true;
+
+            languagePacks = [
+                "pt-BR"
+            ];
+
+            preferences = {
+                "browser.startup.homepage" = "https://www.google.com";
+                "privacy.resistFingerprinting" = true;
+            };
+
+            policies = {
+                DisableTelemetry = true;
+                ExtensionSettings = let
+                    moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
+                in {
+                    "*" = {
+                        installation_mode = "blocked";
+                    };
+
+                    "uBlock0@raymondhill.net" = {
+                        install_url = moz "ublock-origin";
+                        installation_mode = "force_installed";
+                    };
+                };
+            };
         };
 
         steam = {
@@ -38,22 +177,58 @@
             dedicatedServer = {
                 openFirewall = true;
             };
-
-            gamescopeSession = {
-                enable = true;
-            };
         };
 
         zsh = {
             enable = true;
+            enableCompletion = true;
+            autosuggestions = {
+                enable = true;
+            };
+
+            syntaxHighlighting = {
+                enable = true;
+            };
+
+            shellAliases = {
+                update = "sudo ~/.local/bin/update-system";
+                rebuild = "sudo nixos-rebuild switch";
+            };
+
+            histSize = 10000;
+            histFile = "$HOME/.zsh_history";
+            setOptions = [
+                "HIST_IGNORE_ALL_DUPS"
+            ];
+
+            ohMyZsh = {
+                enable = true;
+                plugins = [
+                    "git"
+                ];
+                theme = "robbyrussell";
+            };
         };
 
         starship = {
             enable = true;
+
+            settings = {
+                add_newline = true;
+                command_timeout = 1300;
+                scan_timeout = 50;
+                format = "$all$nix_shell$nodejs$lua$golang$rust$php$git_branch$git_commit$git_state$git_status\n$username$hostname$directory";
+                character = {
+                    success_symbol = "[](bold green) ";
+                    error_symbol = "[✗](bold red) ";
+                };
+            };
         };
 
         hyprland = {
             enable = true;
+            withUWSM = true;
+            xwayland.enable = true;
         };
 
         gamemode = {
@@ -62,6 +237,31 @@
 
         dconf = {
             enable = true;
+        };
+
+        obs-studio = {
+            enable = true;
+
+            # optional Nvidia hardware acceleration
+            package = (
+                pkgs.obs-studio.override {
+                    cudaSupport = true;
+                }
+            );
+
+            plugins = with pkgs.obs-studio-plugins; [
+                wlrobs
+                obs-backgroundremoval
+                obs-pipewire-audio-capture
+                obs-gstreamer
+                obs-vkcapture
+            ];
+        };
+
+        neovim = {
+            enable = true;
+            defaultEditor = true;
+            vimAlias = true;
         };
     };
 
@@ -165,7 +365,7 @@
                 useOSProber = true;
             };
         };
-        kernelPackages = pkgs.linuxPackages_latest;
+        kernelPackages = pkgs.linuxPackages;
     };
 
     networking = {
@@ -220,13 +420,10 @@
 
                 packages = with pkgs; [
                     vlc
-                    obs-studio
                     zapzap
                     alacritty
                     fastfetch
-                    libreoffice
-                    vscodium
-                    zed-editor
+                    libreoffice-qt
                     kdePackages.kate
                     protonup-qt
                     protontricks
@@ -236,6 +433,7 @@
                     spotdl
                     p7zip
                     freetube
+                    zed-editor
                 ];
             };
         };
@@ -266,7 +464,6 @@
             ]))
             geckodriver
             wget
-            neovim
             zip
             unzip
             wine
@@ -279,6 +476,8 @@
             pciutils
             usbutils
             killall
+            hunspell
+            hunspellDicts.pt_BR
         ];
 
         sessionVariables = {
