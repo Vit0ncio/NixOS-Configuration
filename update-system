@@ -1,0 +1,69 @@
+#!/usr/bin/env zsh
+
+set -euo pipefail
+
+# ----- CORES -----
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
+# ----- HELPERS -----
+section() { echo; echo "${BLUE}${BOLD}══ $1 ══${RESET}"; }
+ok()      { echo "${GREEN}✔ $1${RESET}"; }
+warn()    { echo "${YELLOW}⚠ $1${RESET}"; }
+fail()    { echo "${RED}✘ $1${RESET}"; }
+
+FLAKE_DIR="/etc/nixos/"
+HOSTNAME=$(hostname)
+START_TIME=$SECONDS
+
+# Mantém sudo ativo durante o script
+sudo -v
+while true; do sudo -n true; sleep 50; kill -0 "$$" 2>/dev/null || exit; done 2>/dev/null &
+SUDO_PID=$!
+trap "kill $SUDO_PID 2>/dev/null; exit" EXIT INT TERM
+
+# ----- 1. Atualiza inputs do flake -----
+section "Atualizando inputs do flake"
+if sudo nix flake update "$FLAKE_DIR"; then
+    ok "Flake atualizado"
+else
+    fail "Falha ao atualizar flake"
+    exit 1
+fi
+
+# ----- 2. Rebuild do sistema -----
+section "Aplicando nova geração do sistema"
+if sudo nixos-rebuild switch --flake "$FLAKE_DIR#$HOSTNAME"; then
+    ok "Sistema atualizado"
+else
+    fail "Falha no nixos-rebuild"
+    exit 1
+fi
+
+# ----- 3. Flatpak -----
+section "Atualizando flatpaks"
+if command -v flatpak >/dev/null 2>&1; then
+    flatpak update -y && ok "Flatpaks atualizados"
+    flatpak uninstall --unused -y && ok "Flatpaks não utilizados removidos"
+else
+    warn "Flatpak não instalado, pulando"
+fi
+
+# ----- 4. Limpeza de gerações antigas -----
+section "Removendo gerações antigas (> 5 dias)"
+sudo nix-collect-garbage --delete-older-than 5d
+nix-collect-garbage --delete-older-than 5d
+ok "Gerações limpas"
+
+# ----- 5. Geração atual -----
+section "Geração atual"
+sudo nix-env --list-generations --profile /nix/var/nix/profiles/system | tail -3
+
+# ----- Fim -----
+ELAPSED=$(( SECONDS - START_TIME ))
+echo
+echo "${GREEN}${BOLD}✔ Tudo pronto em ${ELAPSED}s${RESET}"
