@@ -228,7 +228,11 @@
         hyprland = {
             enable = true;
             withUWSM = true;
-            xwayland.enable = true;
+            xwayland = {
+                enable = true;
+            };
+            package = pkgs.unstable.hyprland;
+            portalPackage = pkgs.unstable.xdg-desktop-portal-hyprland;
         };
 
         gamemode = {
@@ -244,12 +248,12 @@
 
             # optional Nvidia hardware acceleration
             package = (
-                pkgs.obs-studio.override {
+                pkgs.unstable.obs-studio.override {
                     cudaSupport = true;
                 }
             );
 
-            plugins = with pkgs.obs-studio-plugins; [
+            plugins = with pkgs.unstable.obs-studio-plugins; [
                 wlrobs
                 obs-backgroundremoval
                 obs-pipewire-audio-capture
@@ -425,15 +429,16 @@
                     fastfetch
                     libreoffice-qt
                     kdePackages.kate
-                    protonup-qt
                     protontricks
-                    logseq
                     papirus-nord
                     bibata-cursors
-                    spotdl
+                    unstable.spotdl
                     p7zip
-                    freetube
-                    zed-editor
+
+                    unstable.protonup-qt
+                    unstable.logseq
+                    unstable.freetube
+                    unstable.zed-editor
                 ];
             };
         };
