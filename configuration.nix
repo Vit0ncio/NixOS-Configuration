@@ -26,12 +26,12 @@
             enable = true;
 
             package = (
-                unstable.obs-studio.override {
+                pkgs.obs-studio.override {
                     cudaSupport = true;
                 }
             );
 
-            plugins = with unstable.obs-studio-plugins; [
+            plugins = with pkgs.obs-studio-plugins; [
                 wlrobs
                 obs-backgroundremoval
                 obs-pipewire-audio-capture
@@ -242,7 +242,6 @@
             };
 
             package = unstable.hyprland;
-            portalPackage = unstable.xdg-desktop-portal-hyprland;
         };
 
         gamemode = {
@@ -252,7 +251,7 @@
         dconf = {
             enable = true;
         };
-        
+
         gamescope = {
             enable = true;
         };
@@ -276,13 +275,13 @@
         };
 
         displayManager = {
-            sddm = {
+            gdm = {
                 enable = true;
             };
         };
 
         desktopManager = {
-            plasma6 = {
+            gnome = {
                 enable = true;
             };
         };
@@ -410,26 +409,6 @@
                     "networkmanager"
                     "wheel"
                 ];
-
-                packages = with pkgs; [
-                    vlc
-                    zapzap
-                    alacritty
-                    fastfetch
-                    libreoffice-qt
-                    vscodium
-                    zed-editor
-                    kdePackages.kate
-                    protonup-qt
-                    protontricks
-                    logseq
-                    papirus-nord
-                    bibata-cursors
-                    spotdl
-                    p7zip
-                    freetube
-                    obsidian
-                ];
             };
         };
     };
@@ -474,7 +453,6 @@
             killall
             hunspell
             hunspellDicts.pt_BR
-            hyphenDicts.pt_BR
         ];
 
         sessionVariables = {
@@ -488,4 +466,3 @@
        stateVersion = "25.11";
     };
 }
-
