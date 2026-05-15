@@ -1,6 +1,7 @@
 {
 	config,
 	pkgs,
+	unstable,
 	...
 }:
 
@@ -17,151 +18,193 @@
                 extraPkgs = pkgs: [
                     pkgs.icu
                     pkgs.libxcrypt-legacy
-                    pkgs.python312
-                    pkgs.python312Packages.torch
                 ];
             };
         };
 
-        nix-ld = {
+        obs-studio = {
             enable = true;
 
+            package = (
+                unstable.obs-studio.override {
+                    cudaSupport = true;
+                }
+            );
+
+            plugins = with unstable.obs-studio-plugins; [
+                wlrobs
+                obs-backgroundremoval
+                obs-pipewire-audio-capture
+                obs-gstreamer
+                obs-vkcapture
+            ];
+        };
+
+        nix-ld = {
+            enable = true;
             libraries = with pkgs; [
                 # List by default
-                zlib
-                zstd
-                stdenv.cc.cc
-                curl
-                openssl
-                attr
-                libssh
-                bzip2
-                libxml2
-                acl
-                libsodium
-                util-linux
-                xz
-                systemd
-                xorg.libXcomposite
-                xorg.libXtst
-                xorg.libXrandr
-                xorg.libXext
-                xorg.libX11
-                xorg.libXfixes
-                libGL
-                libva
-                pipewire
-                xorg.libxcb
-                xorg.libXdamage
-                xorg.libxshmfence
-                xorg.libXxf86vm
-                libelf
-                glib
-                gtk2
-                networkmanager
-                vulkan-loader
-                libgbm
-                libdrm
-                libxcrypt
-                coreutils
-                pciutils
-                zenity
-                xorg.libXinerama
-                xorg.libXcursor
-                xorg.libXrender
-                xorg.libXScrnSaver
-                xorg.libXi
-                xorg.libSM
-                xorg.libICE
-                gnome2.GConf
-                nspr
-                nss
-                cups
-                libcap
-                SDL2
-                libusb1
-                dbus-glib
-                ffmpeg
-                libudev0-shim
-                gtk3
-                icu
-                libnotify
-                gsettings-desktop-schemas
-                xorg.libXt
-                xorg.libXmu
-                libogg
-                libvorbis
-                SDL
-                SDL2_image
-                glew110
-                libidn
-                tbb
-                flac
-                freeglut
-                libjpeg
-                libpng
-                libpng12
-                libsamplerate
-                libmikmod
-                libtheora
-                libtiff
-                pixman
-                speex
-                SDL_image
-                SDL_ttf
-                SDL_mixer
-                SDL2_ttf
-                SDL2_mixer
-                libappindicator-gtk2
-                libdbusmenu-gtk2
-                libindicator-gtk2
-                libcaca
-                libcanberra
-                libgcrypt
-                libvpx
-                librsvg
-                xorg.libXft
-                libvdpau
-                pango
-                cairo
-                atk
-                gdk-pixbuf
-                fontconfig
-                freetype
-                dbus
-                alsa-lib
-                expat
-                libxkbcommon
-                libxcrypt-legacy
-                libGLU
-                fuse
-                e2fsprogs
+                      zlib
+                      zstd
+                      stdenv.cc.cc
+                      curl
+                      openssl
+                      attr
+                      libssh
+                      bzip2
+                      libxml2
+                      acl
+                      libsodium
+                      util-linux
+                      xz
+                      systemd
+
+                      # My own additions
+                      xorg.libXcomposite
+                      xorg.libXtst
+                      xorg.libXrandr
+                      xorg.libXext
+                      xorg.libX11
+                      xorg.libXfixes
+                      libGL
+                      libva
+                      pipewire
+                      xorg.libxcb
+                      xorg.libXdamage
+                      xorg.libxshmfence
+                      xorg.libXxf86vm
+                      libelf
+
+                      # Required
+                      glib
+                      gtk2
+
+                      # Inspired by steam
+                      # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/st/steam/package.nix#L36-L85
+                      networkmanager
+                      vulkan-loader
+                      libgbm
+                      libdrm
+                      libxcrypt
+                      coreutils
+                      pciutils
+                      zenity
+                      # glibc_multi.bin # Seems to cause issue in ARM
+
+                      # # Without these it silently fails
+                      xorg.libXinerama
+                      xorg.libXcursor
+                      xorg.libXrender
+                      xorg.libXScrnSaver
+                      xorg.libXi
+                      xorg.libSM
+                      xorg.libICE
+                      nspr
+                      nss
+                      cups
+                      libcap
+                      SDL2
+                      libusb1
+                      dbus-glib
+                      ffmpeg
+                      # Only libraries are needed from those two
+                      libudev0-shim
+
+                      # needed to run unity
+                      gtk3
+                      icu
+                      libnotify
+                      gsettings-desktop-schemas
+                      # https://github.com/NixOS/nixpkgs/issues/72282
+                      # https://github.com/NixOS/nixpkgs/blob/2e87260fafdd3d18aa1719246fd704b35e55b0f2/pkgs/applications/misc/joplin-desktop/default.nix#L16
+                      # log in /home/leo/.config/unity3d/Editor.log
+                      # it will segfault when opening files if you don’t do:
+                      # export XDG_DATA_DIRS=/nix/store/0nfsywbk0qml4faa7sk3sdfmbd85b7ra-gsettings-desktop-schemas-43.0/share/gsettings-schemas/gsettings-desktop-schemas-43.0:/nix/store/rkscn1raa3x850zq7jp9q3j5ghcf6zi2-gtk+3-3.24.35/share/gsettings-schemas/gtk+3-3.24.35/:$XDG_DATA_DIRS
+                      # other issue: (Unity:377230): GLib-GIO-CRITICAL **: 21:09:04.706: g_dbus_proxy_call_sync_internal: assertion 'G_IS_DBUS_PROXY (proxy)' failed
+
+                      # Verified games requirements
+                      xorg.libXt
+                      xorg.libXmu
+                      libogg
+                      libvorbis
+                      SDL
+                      SDL2_image
+                      glew110
+                      libidn
+                      tbb
+
+                      # Other things from runtime
+                      flac
+                      freeglut
+                      libjpeg
+                      libpng
+                      libsamplerate
+                      libmikmod
+                      libtheora
+                      libtiff
+                      pixman
+                      speex
+                      SDL_image
+                      SDL_ttf
+                      SDL_mixer
+                      SDL2_ttf
+                      SDL2_mixer
+                      libappindicator-gtk2
+                      libdbusmenu-gtk2
+                      libindicator-gtk2
+                      libcaca
+                      libcanberra
+                      libgcrypt
+                      libvpx
+                      librsvg
+                      xorg.libXft
+                      libvdpau
+                      # ...
+                      # Some more libraries that I needed to run programs
+                      pango
+                      cairo
+                      atk
+                      gdk-pixbuf
+                      fontconfig
+                      freetype
+                      dbus
+                      alsa-lib
+                      expat
+                      # for blender
+                      libxkbcommon
+
+                      libxcrypt-legacy # For natron
+                      libGLU # For natron
+
+                      # Appimages need fuse, e.g. https://musescore.org/fr/download/musescore-x86_64.AppImage
+                      fuse
+                      e2fsprogs
             ];
         };
 
         firefox = {
             enable = true;
-
             languagePacks = [
                 "pt-BR"
             ];
 
             preferences = {
-                "browser.startup.homepage" = "https://www.google.com";
-                "privacy.resistFingerprinting" = true;
+              "browser.startup.homepage" = "https://www.google.com/";
+              "privacy.resistFingerprinting" = true;
             };
 
             policies = {
                 DisableTelemetry = true;
                 ExtensionSettings = let
                     moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
+
                 in {
                     "*" = {
                         installation_mode = "blocked";
                     };
 
                     "uBlock0@raymondhill.net" = {
-                        install_url = moz "ublock-origin";
+                        install_url       = moz "ublock-origin";
                         installation_mode = "force_installed";
                     };
                 };
@@ -177,52 +220,18 @@
             dedicatedServer = {
                 openFirewall = true;
             };
+
+            gamescopeSession = {
+                enable = true;
+            };
         };
 
         zsh = {
             enable = true;
-            enableCompletion = true;
-            autosuggestions = {
-                enable = true;
-            };
-
-            syntaxHighlighting = {
-                enable = true;
-            };
-
-            shellAliases = {
-                update = "sudo ~/.local/bin/update-system";
-                rebuild = "sudo nixos-rebuild switch";
-            };
-
-            histSize = 10000;
-            histFile = "$HOME/.zsh_history";
-            setOptions = [
-                "HIST_IGNORE_ALL_DUPS"
-            ];
-
-            ohMyZsh = {
-                enable = true;
-                plugins = [
-                    "git"
-                ];
-                theme = "robbyrussell";
-            };
         };
 
         starship = {
             enable = true;
-
-            settings = {
-                add_newline = true;
-                command_timeout = 1300;
-                scan_timeout = 50;
-                format = "$all$nix_shell$nodejs$lua$golang$rust$php$git_branch$git_commit$git_state$git_status\n$username$hostname$directory";
-                character = {
-                    success_symbol = "[](bold green) ";
-                    error_symbol = "[✗](bold red) ";
-                };
-            };
         };
 
         hyprland = {
@@ -231,8 +240,9 @@
             xwayland = {
                 enable = true;
             };
-            package = pkgs.unstable.hyprland;
-            portalPackage = pkgs.unstable.xdg-desktop-portal-hyprland;
+
+            package = unstable.hyprland;
+            portalPackage = unstable.xdg-desktop-portal-hyprland;
         };
 
         gamemode = {
@@ -242,30 +252,9 @@
         dconf = {
             enable = true;
         };
-
-        obs-studio = {
+        
+        gamescope = {
             enable = true;
-
-            # optional Nvidia hardware acceleration
-            package = (
-                pkgs.unstable.obs-studio.override {
-                    cudaSupport = true;
-                }
-            );
-
-            plugins = with pkgs.unstable.obs-studio-plugins; [
-                wlrobs
-                obs-backgroundremoval
-                obs-pipewire-audio-capture
-                obs-gstreamer
-                obs-vkcapture
-            ];
-        };
-
-        neovim = {
-            enable = true;
-            defaultEditor = true;
-            vimAlias = true;
         };
     };
 
@@ -340,7 +329,7 @@
             open = false;
             nvidiaSettings = true;
             powerManagement = {
-                enable = true;
+                enable = false;
             };
         };
   	};
@@ -428,17 +417,18 @@
                     alacritty
                     fastfetch
                     libreoffice-qt
+                    vscodium
+                    zed-editor
                     kdePackages.kate
+                    protonup-qt
                     protontricks
+                    logseq
                     papirus-nord
                     bibata-cursors
-                    unstable.spotdl
+                    spotdl
                     p7zip
-
-                    unstable.protonup-qt
-                    unstable.logseq
-                    unstable.freetube
-                    unstable.zed-editor
+                    freetube
+                    obsidian
                 ];
             };
         };
@@ -469,6 +459,7 @@
             ]))
             geckodriver
             wget
+            neovim
             zip
             unzip
             wine
@@ -483,11 +474,11 @@
             killall
             hunspell
             hunspellDicts.pt_BR
+            hyphenDicts.pt_BR
         ];
 
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
-            WLR_NO_HARDWARE_CURSORS = "1";
             __GL_GSYNC_ALLOWED = "0";
             __GL_VRR_ALLOWED = "0";
         };
@@ -497,3 +488,4 @@
        stateVersion = "25.11";
     };
 }
+

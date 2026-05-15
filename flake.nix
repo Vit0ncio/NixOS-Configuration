@@ -1,41 +1,61 @@
 {
-    description = "Um flake muito básico";
+    description = "NixOS de Vitor";
 
     inputs = {
-        stable.url = "github:NixOS/nixpkgs/nixos-25.11";
-        unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+        nixpkgs-stable = {
+            url = "github:NixOS/nixpkgs/nixos-25.11";
+        };
+
+        nixpkgs-unstable = {
+            url = "github:NixOS/nixpkgs/nixos-unstable";
+        };
+
+        home-manager = {
+            url = "github:nix-community/home-manager/master";
+            inputs.nixpkgs.follows = "nixpkgs-stable";
+        };
     };
 
     outputs = {
         self,
-        stable,
-        unstable
+        nixpkgs-stable,
+        nixpkgs-unstable,
+        home-manager,
+        ...
     }:
 
     let
         system = "x86_64-linux";
-
-        overlays = [{
-            nixpkgs.overlays = [
-                (final: prev: {
-                    unstable = import unstable {
-                        inherit system;
-                        config = {
-                            allowUnfree = true;
-                        };
-                    };
-                })
-            ];
-        }];
+        unstable = import nixpkgs-unstable {
+            inherit system;
+            config = {
+                allowUnfree = true;
+            };
+        };
     in
     {
         nixosConfigurations = {
-            nixos = stable.lib.nixosSystem {
+            nixos = nixpkgs-stable.lib.nixosSystem {
                 inherit system;
                 modules = [
                     ./configuration.nix
-                ] ++ overlays;
+                    home-manager.nixosModules.home-manager {
+                        home-manager = {
+                            useGlobalPkgs = true;
+                            useUserPackages = true;
+                            extraSpecialArgs = {
+                                inherit unstable;
+                            };
+
+                            users = {
+                                vitor = import ./home.nix;
+                            };
+                        };
+                    }
+                ];
+                specialArgs = { inherit unstable; };
             };
         };
     };
 }
+
