@@ -21,6 +21,7 @@
             bibata-cursors
             p7zip
             obsidian
+            discord
 
             unstable.zed-editor
             unstable.protonup-qt
@@ -53,6 +54,7 @@
             shellAliases = {
                 update = "sudo /etc/nixos/update-system";
                 rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+                ls = "eza --all --group-directories-first --icons=always";
             };
 
             oh-my-zsh = {
@@ -95,6 +97,60 @@
                 user = {
                     name = "Vitor Luis";
                     email = "vitorlgv@proton.me";
+                };
+            };
+        };
+
+        firefox = {
+            enable = true;
+            languagePacks = [
+                "pt-BR"
+            ];
+
+            policies = {
+                browser.startup.homepage = "https://www.google.com/";
+                privacy.resistFingerprinting = true;
+                DisableTelemetry = true;
+                ExtensionSettings = let
+                    moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
+
+                in {
+                    "*" = {
+                        private_browsing = true;
+                    };
+
+                    "uBlock0@raymondhill.net" = {
+                        install_url = moz "ublock-origin";
+                        installation_mode = "force_installed";
+                    };
+
+                    "addon@darkreader.org" = {
+                        install_url = moz "darkreader";
+                        installation_mode = "force_installed";
+                    };
+                };
+            };
+        };
+
+        alacritty = {
+            enable = true;
+            theme = "nord";
+
+            settings = {
+                window = {
+                    padding = {
+                        x = 5;
+                        y = 5;
+                    };
+
+                    dynamic_title = false;
+                };
+
+                font = {
+                    normal = {
+                        family = "JetBrainsMono Nerd Font";
+                        style = "Regular";
+                    };
                 };
             };
         };

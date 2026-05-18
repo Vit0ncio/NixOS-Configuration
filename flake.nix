@@ -12,7 +12,26 @@
 
         home-manager = {
             url = "github:nix-community/home-manager/release-25.11";
-            inputs.nixpkgs.follows = "nixpkgs-stable";
+
+            inputs = {
+                nixpkgs = {
+                    follows = "nixpkgs-stable";
+                };
+            };
+        };
+
+        plasma-manager = {
+            url = "github:nix-community/plasma-manager";
+
+            inputs = {
+                nixpkgs = {
+                    follows = "nixpkgs-stable";
+                };
+
+                home-manager = {
+                    follows = "home-manager";
+                };
+            };
         };
     };
 
@@ -21,6 +40,7 @@
         nixpkgs-stable,
         nixpkgs-unstable,
         home-manager,
+        plasma-manager,
         ...
     }:
 
@@ -52,6 +72,10 @@
                             };
 
                             backupFileExtension = "backup";
+
+                            sharedModules = [
+                                plasma-manager.homeManagerModules.plasma-manager
+                            ];
                         };
                     }
                 ];

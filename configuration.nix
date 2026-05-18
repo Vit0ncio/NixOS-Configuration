@@ -151,31 +151,6 @@
             ];
         };
 
-        firefox = {
-            enable = true;
-            languagePacks = [
-                "pt-BR"
-            ];
-
-            preferences = {
-              "browser.startup.homepage" = "https://www.google.com/";
-              "privacy.resistFingerprinting" = true;
-            };
-
-            policies = {
-                DisableTelemetry = true;
-                ExtensionSettings = let
-                    moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
-
-                in {
-                    "uBlock0@raymondhill.net" = {
-                        install_url = moz "ublock-origin";
-                        installation_mode = "force_installed";
-                    };
-                };
-            };
-        };
-
         steam = {
             enable = true;
             remotePlay = {
@@ -240,13 +215,13 @@
         };
 
         displayManager = {
-            gdm = {
+            sddm = {
                 enable = true;
             };
         };
 
         desktopManager = {
-            gnome = {
+            plasma6 = {
                 enable = true;
             };
         };
@@ -418,6 +393,9 @@
             killall
             hunspell
             hunspellDicts.pt_BR
+            eza
+            rar
+            unrar
         ];
 
         sessionVariables = {
