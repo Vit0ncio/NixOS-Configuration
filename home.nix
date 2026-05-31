@@ -8,7 +8,7 @@
     home = {
         username = "vitor";
         homeDirectory = "/home/vitor";
-        stateVersion = "25.11";
+        stateVersion = "26.05";
 
         packages = with pkgs; [
             vlc
@@ -36,14 +36,8 @@
         zsh = {
             enable = true;
             enableCompletion = true;
-
-            autosuggestion = {
-                enable = true;
-            };
-
-            syntaxHighlighting = {
-                enable = true;
-            };
+            autosuggestion.enable = true;
+            syntaxHighlighting.enable = true;
 
             history = {
                 size = 1000;
@@ -103,9 +97,7 @@
 
         firefox = {
             enable = true;
-            languagePacks = [
-                "pt-BR"
-            ];
+            languagePacks = [ "pt-BR" ];
 
             policies = {
                 browser.startup.homepage = "https://www.google.com/";

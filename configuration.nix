@@ -57,19 +57,19 @@
                 util-linux
                 xz
                 systemd
-                xorg.libXcomposite
-                xorg.libXtst
-                xorg.libXrandr
-                xorg.libXext
-                xorg.libX11
-                xorg.libXfixes
+                libxcomposite
+                libxtst
+                libxrandr
+                libxext
+                libx11
+                libxfixes
                 libGL
                 libva
                 pipewire
-                xorg.libxcb
-                xorg.libXdamage
-                xorg.libxshmfence
-                xorg.libXxf86vm
+                libxcb
+                libxdamage
+                libxshmfence
+                libXxf86vm
                 libelf
                 glib
                 gtk2
@@ -81,13 +81,13 @@
                 coreutils
                 pciutils
                 zenity
-                xorg.libXinerama
-                xorg.libXcursor
-                xorg.libXrender
-                xorg.libXScrnSaver
-                xorg.libXi
-                xorg.libSM
-                xorg.libICE
+                libxinerama
+                libxcursor
+                libxrender
+                libxscrnsaver
+                libxi
+                libsm
+                libice
                 nspr
                 nss
                 cups
@@ -101,13 +101,13 @@
                 icu
                 libnotify
                 gsettings-desktop-schemas
-                xorg.libXt
-                xorg.libXmu
+                libxt
+                libxmu
                 libogg
                 libvorbis
                 SDL
                 SDL2_image
-                glew110
+                glew_1_10
                 libidn
                 tbb
                 flac
@@ -133,7 +133,7 @@
                 libgcrypt
                 libvpx
                 librsvg
-                xorg.libXft
+                libxft
                 libvdpau
                 pango
                 cairo
@@ -153,54 +153,28 @@
 
         steam = {
             enable = true;
-            remotePlay = {
-                openFirewall = true;
-            };
-
-            dedicatedServer = {
-                openFirewall = true;
-            };
-
-            gamescopeSession = {
-                enable = true;
-            };
+            remotePlay.openFirewall = true;
+            dedicatedServer.openFirewall = true;
+            gamescopeSession.enable = true;
         };
 
-        zsh = {
-            enable = true;
-        };
-
-        starship = {
-            enable = true;
-        };
+        zsh.enable = true;
+        starship.enable = true;
 
         hyprland = {
             enable = true;
             withUWSM = true;
-            xwayland = {
-                enable = true;
-            };
-
+            xwayland.enable = true;
             package = unstable.hyprland;
         };
 
-        gamemode = {
-            enable = true;
-        };
-
-        dconf = {
-            enable = true;
-        };
-
-        gamescope = {
-            enable = true;
-        };
+        gamemode.enable = true;
+        dconf.enable = true;
+        gamescope.enable = true;
     };
 
     services = {
-        flatpak = {
-            enable = true;
-        };
+        flatpak.enable = true;
 
         xserver = {
             videoDrivers = [
@@ -208,27 +182,16 @@
             ];
 
             enable = true;
+
             xkb = {
                 layout = "br";
                 variant = "";
             };
         };
 
-        displayManager = {
-            sddm = {
-                enable = true;
-            };
-        };
-
-        desktopManager = {
-            plasma6 = {
-                enable = true;
-            };
-        };
-
-        printing = {
-            enable = true;
-        };
+        displayManager.sddm.enable = true;
+        desktopManager.plasma6.enable = true;
+        printing.enable = true;
 
         pipewire = {
             enable = true;
@@ -237,39 +200,27 @@
                 support32Bit = true;
             };
 
-            pulse = {
-                enable = true;
-            };
-
-            jack = {
-                enable = true;
-            };
+            pulse.enable = true;
+            jack.enable = true;
         };
 
-        pulseaudio = {
-            enable = false;
-        };
+        pulseaudio.enable = false;
 
         fstrim = {
             enable = true;
             interval = "weekly";
         };
 
-        fwupd = {
-            enable = true;
-        };
+        fwupd.enable = true;
     };
 
   	hardware = {
         nvidia = {
-            modesetting = {
-                enable = true;
-            };
+            modesetting.enable = true;
             open = false;
             nvidiaSettings = true;
-            powerManagement = {
-                enable = false;
-            };
+            powerManagement.enable = false;
+            branch = "legacy_580";
         };
   	};
 
@@ -302,18 +253,11 @@
 
     networking = {
         hostName = "nixos";
-        wireless = {
-            enable = false;
-        };
-
-        networkmanager = {
-            enable = true;
-        };
+        wireless.enable = true;
+        networkmanager.enable = true;
     };
 
-    time = {
-        timeZone = "America/Recife";
-    };
+    time.timeZone = "America/Recife";
 
     i18n = {
         defaultLocale = "pt_BR.UTF-8";
@@ -329,15 +273,9 @@
             LC_TIME = "pt_BR.UTF-8";
         };
     };
-    console = {
-        keyMap = "br-abnt2";
-    };
 
-    security = {
-        rtkit = {
-            enable = true;
-        };
-    };
+    console.keyMap = "br-abnt2";
+    security.rtkit.enable = true;
 
     users = {
         users = {
@@ -348,6 +286,7 @@
                 extraGroups = [
                     "networkmanager"
                     "wheel"
+                    "dialout"
                 ];
             };
         };
@@ -364,17 +303,14 @@
         ];
     };
 
-    nixpkgs = {
-        config = {
-            allowUnfree = true;
-        };
-    };
+    nixpkgs.config.allowUnfree = true;
 
     environment = {
         systemPackages = with pkgs; [
             (python3.withPackages (ps: with ps; [
                 requests
                 selenium
+                tkinter
             ]))
             geckodriver
             wget
@@ -396,6 +332,13 @@
             eza
             rar
             unrar
+            android-tools
+            ffmpeg
+            nodejs
+            arduino
+            arduino-ide
+            rustc
+            cargo
         ];
 
         sessionVariables = {
@@ -405,7 +348,5 @@
         };
     };
 
-  	system = {
-       stateVersion = "25.11";
-    };
+  	system.stateVersion = "25.11";
 }

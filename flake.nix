@@ -2,35 +2,20 @@
     description = "NixOS de Vitor";
 
     inputs = {
-        nixpkgs-stable = {
-            url = "github:NixOS/nixpkgs/nixos-25.11";
-        };
-
-        nixpkgs-unstable = {
-            url = "github:NixOS/nixpkgs/nixos-unstable";
-        };
+        nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
+        nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
         home-manager = {
-            url = "github:nix-community/home-manager/release-25.11";
-
-            inputs = {
-                nixpkgs = {
-                    follows = "nixpkgs-stable";
-                };
-            };
+            url = "github:nix-community/home-manager/release-26.05";
+            inputs.nixpkgs.follows = "nixpkgs-stable";
         };
 
         plasma-manager = {
             url = "github:nix-community/plasma-manager";
 
             inputs = {
-                nixpkgs = {
-                    follows = "nixpkgs-stable";
-                };
-
-                home-manager = {
-                    follows = "home-manager";
-                };
+                nixpkgs.follows = "nixpkgs-stable";
+                home-manager.follows = "home-manager";
             };
         };
     };
@@ -48,9 +33,7 @@
         system = "x86_64-linux";
         unstable = import nixpkgs-unstable {
             inherit system;
-            config = {
-                allowUnfree = true;
-            };
+            config.allowUnfree = true;
         };
     in
     {
@@ -67,10 +50,7 @@
                                 inherit unstable;
                             };
 
-                            users = {
-                                vitor = import ./home.nix;
-                            };
-
+                            users.vitor = import ./home.nix;
                             backupFileExtension = "backup";
 
                             sharedModules = [
