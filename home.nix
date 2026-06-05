@@ -22,6 +22,9 @@
             p7zip
             obsidian
             discord
+            kdePackages.kdenlive
+            ares
+            clonehero
 
             unstable.zed-editor
             unstable.protonup-qt
@@ -126,7 +129,7 @@
 
         alacritty = {
             enable = true;
-            theme = "nord";
+            theme = "catppuccin_mocha";
 
             settings = {
                 window = {

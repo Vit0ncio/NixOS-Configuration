@@ -220,9 +220,16 @@
             open = false;
             nvidiaSettings = true;
             powerManagement.enable = false;
-            branch = "legacy_580";
+            branch = "legacy_580"; # Necessário para placas nvidia antigas (GTX 9xx pra baixo ou GT)
         };
   	};
+
+	swapDevices = [
+		{
+			device = "/swapfile";
+			size = 5120;
+		}
+	];
 
     nix = {
         settings = {
