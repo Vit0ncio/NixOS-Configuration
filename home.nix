@@ -29,7 +29,7 @@
             unstable.zed-editor
             unstable.protonup-qt
             unstable.protontricks
-            unstable.logseq
+            # unstable.logseq
             unstable.spotdl
             unstable.freetube
         ];

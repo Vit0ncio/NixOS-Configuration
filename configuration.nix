@@ -165,7 +165,7 @@
             enable = true;
             withUWSM = true;
             xwayland.enable = true;
-            package = unstable.hyprland;
+            package = pkgs.hyprland;
         };
 
         gamemode.enable = true;
@@ -249,10 +249,11 @@
 
     boot = {
         loader = {
-            grub = {
-                enable = true;
-                device = "/dev/sda";
-                useOSProber = true;
+            systemd-boot.enable = true;
+
+            efi = {
+                canTouchEfiVariables = true;
+                efiSysMountPoint = "/boot/efi";
             };
         };
         kernelPackages = pkgs.linuxPackages;
