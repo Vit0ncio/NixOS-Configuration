@@ -25,6 +25,8 @@
             kdePackages.kdenlive
             ares
             clonehero
+            waybar
+            wofi
 
             unstable.zed-editor
             unstable.protonup-qt
@@ -33,6 +35,13 @@
             unstable.spotdl
             unstable.freetube
         ];
+
+        pointerCursor = {
+            gtk.enable = true;
+            name = "Bibata-Modern-Classic";
+            size = 24;
+            package = pkgs.bibata-cursors;
+        };
     };
 
     programs = {
@@ -148,6 +157,119 @@
                     };
                 };
             };
+        };
+
+        waybar = {
+            enable = true;
+
+            settings = {
+                mainBar = {
+                    layer = "top";
+                    position = "top";
+                    height = 36;
+
+                    output = [
+                        "HDMI-A-1"
+                    ];
+
+                    modules-left = [
+                        "clock"
+                    ];
+
+                    modules-right = [
+                        "temperature"
+                        "pulseaudio"
+                        "network"
+                        "cpu"
+                        "memory"
+                    ];
+
+                    "clock" = {
+                        interval = 10;
+                        format = " {:%H:%M}";
+                        tooltip-format = "<tt><small>{calendar}</small></tt>";
+
+                        calendar = {
+                            mode = "year";
+                            mode-mon-col = 3;
+                            weeks-pos = "right";
+                            on-scroll = 1;
+
+                            format = {
+                                months = "<span color='#ffead3'><b>{}</b></span>";
+                                days = "<span color='#ecc6d9'><b>{}</b></span>";
+                                weeks = "<span color='#99ffdd'><b>W{}</b></span>";
+                                weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+                                today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+                            };
+                        };
+                    };
+
+                    "temperature" = {
+                        interval = 5;
+                        format = " {temperatureC}°C";
+                    };
+
+
+                    "pulseaudio" = {
+                        format = " {volume}%";
+                        on-click = "pavucontrol";
+                    };
+
+                    "network" = {
+                        interval = 5;
+                        interface = "enp3s0";
+                        format = "󰣶 CONECTADO";
+                        format-disconnected = "󰣷 DESCONECTADO";
+                    };
+
+                    "cpu" = {
+                        interval = 5;
+                        format = " {usage}%";
+                    };
+
+                    "memory" = {
+                        interval = 5;
+                        format = " {used:0.1f}G/{total:0.1f}G";
+                    };
+                };
+            };
+
+            style = ''
+                * {
+                    border: none;
+                    border-radius: 0;
+                    font-family: JetBrainsMono Nerd Font;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+
+                window#waybar {
+                    background: #000000;
+                    color: #FFFFFF;
+                }
+            '';
+        };
+
+        wofi = {
+            enable = true;
+
+            settings = {
+                location = "center";
+                allow_markup = true;
+                width = 500;
+            };
+
+            style = ''
+                * {
+                    font-family: Inter;
+                }
+
+                window {
+                    background-color: #000000;
+                    color: #FFFFFF;
+                }
+            '';
         };
     };
 }
